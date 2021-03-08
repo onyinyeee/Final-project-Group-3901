@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello, WebVR! - A-Frame</title>
+        <meta name="description" content="Hello, WebVR! - A-Frame">
+        <script src="/js/aframe.min.js"></script>
+        <script src="/js/env-map.js"></script>
+        <!-- movement components for compatibilty with all devices : https://www.youtube.com/watch?v=YJkHOQXVA1w&ab_channel=DaniloPasquariello-->
+        <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extra.min.js"></script>
+        <link rel="styhesheet" herf="/css/user-gesture.css">
+        
+        <script>
+           AFRAME.registerComponent('start-experience', {
+          init: function () {
+            //we can't play sound on some browsers until we have some user interaction
+            //this means we should only start playing ambient music after this button is clicked
+            console.log('scene loaded');
+            document.querySelector('#loading-animation').style.display='none';
+            document.querySelector('#user-gesture-button').style.display='block';
+          }
+        });
+
+           //function called from user-gesture click
+           const startExperience = function() {
+          //hide user-gesture overlay
+          document.querySelector('#user-gesture-overlay').style.display='none';
+          
+          //start all ambient music
+          const ambientSounds = document.querySelectorAll('.ambient-music');
+          ambientSounds.forEach(function(soundEntity) {
+            soundEntity.components.sound.playSound();
+          });
+        }
+        </script>
+    </head>
+    <body>
+        <div id ="user gesture overlay">
+            <div clas = "center">
+                <button id="user gesture button" onclick="">Enter Experience </button>
+                <img id="loading-animation" src="/assets/loader_animation.gif">
+            </div>
+        </div>
+        <!-- main scene and we added shadows .. -->
+        <a-scene shadow="type:basic;">
+           <a-assets timeout="10000">
+                  
+                 <!-- NEW: ambient "space' music from https://soundcloud.com/royaltyfreebackgroundmusic/creative-commons-music-3946 -->
+                  <audio id="#Tavern_Music" src="/assets/sound/haunt.mp3" preload="auto" crossorigin="anonymous"></audio>
+
+                    <!-- all assets that can be cached by browser -->
+                    <img crossorigin="anonymous" id="skymap" src="/assets/textures/Nsky.jpg">
+                    
+                    <!-- Audio samples from: https://themushroomkingdom.net/media/smb/wav -->
+                    <audio id="createSound" crossorigin="anonymous" src="/assets/sound/kick.mp3" ></audio> 
+
+                    <!-- 3D models -->
+                    <a-asset-item id="house_layout"  response-type="arraybuffer" src="/assets/models/scene.glb"></a-asset-item>
+                    <a-asset-item id="ghost_entity"  response-type="arraybuffer" src="/assets/models/cabinet.glb"></a-asset-item>
+          </a-assets>
+                
+         <!-- camera Rig -->
+         <a-entity movement-controls position="0 4 4 " camera look-controls wasd-controls>
+         <a-entity light="type:spot; intensity:1.4; castShadow:true; shadowBias:-0.0005; angle:20; penumbra:0.3;" position="0.5 -0.5 0" rotation="0 0 0"></a-entity>
+           <a-cursor color ="#ff000" />
+         <!-- if you add rayOrigin:mouse to teh cursor properties selection happens where you click -->
+                    <a-entity   cursor="fuse:false; fuseTimeout:500; rayOrigin:mouse;"></a-entity>
+                </a-entity>
+
+                <a-entity sound="src:##Tavern_Music; autoplay:true;"></a-entity>
+                 <!-- following images from adobe stock -->
+        
+          <img id="sky_img"     src="/assets/textures/Nsky.jpg"     crossorigin="anonymous">
+        </a-assets>
+
+            <!-- Postioning & format for House-->
+            <a-entity id="Houese_Layout" position="-30.475 -1 0" rotation="0 -90 0" scale="1 1 1 "
+            gltf-model="#house_layout">
+            </a-entity>
+
+             <!-- Postioning & format for ghost-->
+             <a-entity id="Ghost_Entity" position="0 1 0" rotation="0 -90 0" scale="0.005 0.005 0.005"
+             gltf-model="#ghost_entity">
+             <a-animation attribute="rotation" begin="click" repeat="indefinite" to="0 180 0"></a-animation>
+             </a-entity>
+
+         </a-entity>
+                </a-entity>   
+                    
+            <!-- I kept this sky because I like it :) -->
+            
+                <!-- manual method of creating "sky sphere" -->
+                <a-entity id="sky"
+                    geometry="primitive:sphere; radius:500;"
+                    material="shader:flat; src:#skymap; side:back; height:2048; width:2048"></a-entity>
+        </a-scene>
+    </body>
+</html>
