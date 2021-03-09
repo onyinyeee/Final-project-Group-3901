@@ -56,11 +56,19 @@
                     <!-- 3D models -->
                     <a-asset-item id="house_layout"  response-type="arraybuffer" src="/assets/models/scene.glb"></a-asset-item>
                     <a-asset-item id="ghost_entity"  response-type="arraybuffer" src="/assets/models/cabinet.glb"></a-asset-item>
+                    <a-asset-item id="handLight"  response-type="arraybuffer" src="/assets/models/handlight.glb"></a-asset-item>
+                    <a-asset-item id="fire_model"  response-type="arraybuffer" src="/assets/models/fire.glb"></a-asset-item>
           </a-assets>
                 
          <!-- camera Rig -->
          <a-entity movement-controls position="0 4 4 " camera look-controls wasd-controls>
-         <a-entity light="type:spot; intensity:1.4; castShadow:true; shadowBias:-0.0005; angle:20; penumbra:0.3;" position="0.5 -0.5 0" rotation="0 0 0"></a-entity>
+          <a-entity light="type:spot; intensity:1.0; castShadow:true; shadowBias:-0.0005; angle:20; penumbra:0.3;" position="0.5 -0.5 0" rotation="0 0 0"></a-entity>
+          <a-entity id="handlight" position="0.5 -0.501 -1.625" rotation="0 0 0" scale="0.35 0.35 0.35 "
+          gltf-model="#handLight">
+          </a-entity>
+
+        
+         
            <a-cursor color ="#ff000" />
          <!-- if you add rayOrigin:mouse to teh cursor properties selection happens where you click -->
                     <a-entity   cursor="fuse:false; fuseTimeout:500; rayOrigin:mouse;"></a-entity>
@@ -76,6 +84,13 @@
             <a-entity id="Houese_Layout" position="-30.475 -1 0" rotation="0 -90 0" scale="1 1 1 "
             gltf-model="#house_layout">
             </a-entity>
+
+            <!--fire with animation-->
+            <a-entity id="fire" class="button interactive" position="8.619 0.286 2.052" rotation="0 0 0" scale="0.565 0.69 1.3" visible="true"
+            animation="property:scale; from:8.9 8.9 8.9; to:8.6 8.6 8.6; loop:true; dur:300"
+            gltf-model="#fire_model">
+            <a-animation attribute= "scale" repeat="indefinite" to="0.665 0.79 1.4"></a-animation>
+          </a-entity>
 
              <!-- Postioning & format for ghost-->
              <a-entity id="Ghost_Entity" position="0 1 0" rotation="0 -90 0" scale="0.005 0.005 0.005"
